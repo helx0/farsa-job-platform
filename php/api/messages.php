@@ -129,7 +129,7 @@ switch ($action) {
             Response::error('Message ID required');
         }
 
-        $message->markMessageAsRead((int)$data['message_id']);
+        $message->markMessageAsRead((int)$data['message_id'], (int)$_SESSION['user_id']);
 
         Response::success('Message marked as read');
         break;
