@@ -72,6 +72,12 @@ class User {
 
     public function login($email, $password) {
         try {
+            $clientIp = Security::getClientIp();
+
+            if (Security::isLoginRateLimited($email, $clientIp)) {
+                return ['success' => false, 'message' => 'محاولات تسجيل الدخول كثيرة. حاول مرة أخرى بعد قليل'];
+            }
+
             $stmt = $this->db->prepare("
                 SELECT id, password, user_type, status, email_verified 
                 FROM users WHERE email = ?
@@ -81,12 +87,14 @@ class User {
             $result = $stmt->get_result();
 
             if ($result->num_rows === 0) {
+                Security::recordFailedLogin($email, $clientIp);
                 return ['success' => false, 'message' => 'البريد أو كلمة المرور غير صحيحة'];
             }
 
             $user = $result->fetch_assoc();
 
             if (!Security::verifyPassword($password, $user['password'])) {
+                Security::recordFailedLogin($email, $clientIp);
                 return ['success' => false, 'message' => 'البريد أو كلمة المرور غير صحيحة'];
             }
 
@@ -97,6 +105,8 @@ class User {
             if ($user['status'] === 'pending_verification' && !$user['email_verified']) {
                 return ['success' => false, 'message' => 'يرجى التحقق من بريدك الإلكتروني أولاً'];
             }
+
+            Security::clearLoginAttempts($email, $clientIp);
 
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
