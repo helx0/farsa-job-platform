@@ -52,6 +52,10 @@ if ($jwtSecret === '') {
 }
 define('JWT_SECRET', $jwtSecret);
 define('SESSION_TIMEOUT', 3600);
+// Authentication hardening: throttle repeated failed logins by email and source IP.
+define('LOGIN_MAX_ATTEMPTS', 5);
+define('LOGIN_WINDOW_SECONDS', 900); // 15 minutes
+define('LOGIN_LOCKOUT_SECONDS', 900); // 15 minutes
 define('PASSWORD_MIN_LENGTH', 8);
 define('PASSWORD_REQUIRE_UPPERCASE', true);
 define('PASSWORD_REQUIRE_NUMBERS', true);
@@ -292,6 +296,58 @@ class Security {
 
     public static function verifyPassword($password, $hash) {
         return password_verify($password, $hash);
+    }
+
+    public static function getClientIp() {
+        // Do not trust X-Forwarded-For unless the deployment explicitly configures
+        // a trusted reverse proxy and normalizes the header.
+        return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    public static function isLoginRateLimited($email, $ip) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("
+            SELECT MAX(blocked_until) AS blocked_until,
+                   MAX(first_failed_at) AS first_failed_at,
+                   COALESCE(MAX(attempts), 0) AS attempts
+            FROM login_attempts
+            WHERE (email = ? OR ip_address = ?)
+              AND first_failed_at >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+        ");
+        $stmt->bind_param('ss', $email, $ip);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+
+        if (!empty($row['blocked_until']) && strtotime($row['blocked_until']) > time()) {
+            return true;
+        }
+
+        return ((int)$row['attempts'] >= LOGIN_MAX_ATTEMPTS);
+    }
+
+    public static function recordFailedLogin($email, $ip) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("
+            INSERT INTO login_attempts (email, ip_address, attempts, first_failed_at, blocked_until)
+            VALUES (?, ?, 1, NOW(), NULL)
+            ON DUPLICATE KEY UPDATE
+                attempts = IF(first_failed_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE), 1, attempts + 1),
+                first_failed_at = IF(first_failed_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE), NOW(), first_failed_at),
+                blocked_until = IF(
+                    IF(first_failed_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE), 1, attempts + 1) >= 5,
+                    DATE_ADD(NOW(), INTERVAL 15 MINUTE),
+                    blocked_until
+                )
+        ");
+        $stmt->bind_param('ss', $email, $ip);
+        $stmt->execute();
+    }
+
+    public static function clearLoginAttempts($email, $ip) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("DELETE FROM login_attempts WHERE email = ? OR ip_address = ?");
+        $stmt->bind_param('ss', $email, $ip);
+        $stmt->execute();
     }
 
     public static function validatePassword($password) {
