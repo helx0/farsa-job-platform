@@ -124,14 +124,19 @@ class Application {
         }
     }
 
-    public function updateApplicationStatus($applicationId, $status, $notes = '') {
+    public function updateApplicationStatus($applicationId, $status, $notes = '', $employerUserId = null) {
         try {
+            if ($employerUserId === null) {
+                return ['success' => false, 'message' => 'Unauthorized'];
+            }
+
             $stmt = $this->db->prepare("
-                UPDATE job_applications 
-                SET application_status = ?, reviewed_date = NOW(), notes = ?
-                WHERE id = ?
+                UPDATE job_applications ja
+                INNER JOIN employers e ON ja.employer_id = e.id
+                SET ja.application_status = ?, ja.reviewed_date = NOW(), ja.notes = ?
+                WHERE ja.id = ? AND e.user_id = ?
             ");
-            $stmt->bind_param('ssi', $status, $notes, $applicationId);
+            $stmt->bind_param('ssii', $status, $notes, $applicationId, $employerUserId);
 
             if ($stmt->execute()) {
                 $this->notifyApplicant($applicationId, $status);
@@ -245,7 +250,7 @@ class Application {
         }
     }
 
-    public function getApplicationDetails($applicationId) {
+    public function getApplicationDetails($applicationId, $userId = null, $userType = null) {
         try {
             $stmt = $this->db->prepare("
                 SELECT ja.*, j.job_title_ar, j.job_description_ar, j.required_skills,
@@ -258,9 +263,19 @@ class Application {
                 LEFT JOIN users u ON js.user_id = u.id
                 LEFT JOIN user_skills us ON u.id = us.user_id
                 WHERE ja.id = ?
+                  AND (
+                      (? = 'job_seeker' AND js.user_id = ?)
+                      OR (? = 'employer' AND EXISTS (
+                          SELECT 1 FROM employers e2
+                          WHERE e2.id = ja.employer_id AND e2.user_id = ?
+                      ))
+                      OR ? = 'admin'
+                  )
                 GROUP BY ja.id
             ");
-            $stmt->bind_param('i', $applicationId);
+            $userId = (int)$userId;
+            $userType = (string)$userType;
+            $stmt->bind_param('isisss', $applicationId, $userType, $userId, $userType, $userId, $userType);
             $stmt->execute();
             return $stmt->get_result()->fetch_assoc();
         } catch (Exception $e) {
