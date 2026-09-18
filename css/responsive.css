@@ -1,0 +1,633 @@
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    .grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    html[lang="ar"] .header-content {
+        flex-direction: column;
+    }
+
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    html[lang="ar"] .nav {
+        flex-direction: column;
+    }
+
+    .user-menu {
+        width: 100%;
+        flex-direction: row;
+    }
+
+    .user-menu button {
+        flex: 1;
+    }
+
+    .hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    html[lang="ar"] .hero-buttons {
+        flex-direction: column-reverse;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
+    .grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .grid-cols-4 {
+        grid-template-columns: 1fr !important;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .job-card {
+        border-left: 4px solid var(--primary);
+    }
+
+    html[lang="ar"] .job-card {
+        border-right: 4px solid var(--primary);
+    }
+
+    .job-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .badge {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: none;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    input, textarea, select {
+        font-size: 16px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    table th, table td {
+        padding: 8px 4px;
+    }
+
+    .notification {
+        right: 10px !important;
+        left: auto !important;
+        width: 90%;
+        max-width: 300px;
+    }
+
+    html[lang="ar"] .notification {
+        left: 10px !important;
+        right: auto !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .header-content {
+        gap: 10px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .nav {
+        gap: 5px;
+    }
+
+    .nav a {
+        font-size: 0.9rem;
+    }
+
+    .hero {
+        padding: 40px 0;
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .hero p {
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .job-card {
+        padding: 15px;
+    }
+
+    .job-title {
+        font-size: 1.1rem;
+    }
+
+    .company-name {
+        font-size: 0.85rem;
+    }
+
+    .badge {
+        padding: 3px 8px;
+        font-size: 0.75rem;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .btn-primary, .btn-secondary, .btn-danger {
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    label {
+        font-size: 0.95rem;
+    }
+
+    input, textarea, select {
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    .footer {
+        padding: 25px 0;
+    }
+
+    .footer-section h4 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+    }
+
+    .footer-section ul li {
+        margin-bottom: 8px;
+    }
+
+    .footer-section a {
+        font-size: 0.9rem;
+    }
+
+    .notification {
+        font-size: 0.9rem;
+        padding: 12px 15px;
+    }
+
+    .modal-header {
+        font-size: 1.2rem;
+    }
+
+    .grid {
+        gap: 15px;
+    }
+
+    .my-20 {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    table {
+        font-size: 0.85rem;
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 8px;
+    }
+
+    .logo {
+        font-size: 1.3rem;
+    }
+
+    .nav {
+        gap: 3px;
+    }
+
+    .nav a {
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+
+    h1 {
+        font-size: 1.3rem;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    .hero {
+        padding: 30px 0;
+    }
+
+    .hero h1 {
+        font-size: 1.3rem;
+    }
+
+    .hero p {
+        font-size: 0.9rem;
+    }
+
+    .card {
+        padding: 12px;
+    }
+
+    .job-card {
+        padding: 12px;
+    }
+
+    .job-title {
+        font-size: 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .footer-section h4 {
+        font-size: 0.95rem;
+    }
+
+    .footer-section a {
+        font-size: 0.85rem;
+    }
+
+    .modal-content {
+        padding: 15px;
+    }
+
+    .modal-header {
+        font-size: 1.1rem;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    input, textarea, select {
+        padding: 8px;
+    }
+
+    .grid {
+        gap: 10px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+    .hero {
+        padding: 20px 0;
+    }
+
+    .hero h1 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+
+    .hero p {
+        margin-bottom: 15px;
+    }
+
+    .card {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 20px !important;
+        min-height: 400px !important;
+    }
+
+    .hero-title {
+        font-size: 2.2rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem !important;
+    }
+
+    .section-header h2 {
+        font-size: 2rem !important;
+    }
+
+    .values-grid,
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+        gap: 20px !important;
+    }
+
+    .mission-content {
+        grid-template-columns: 1fr !important;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
+    }
+
+    .timeline::before {
+        left: 0 !important;
+        right: auto !important;
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content,
+    .timeline-item:nth-child(even) .timeline-content {
+        margin-left: 50px !important;
+        margin-right: 0 !important;
+    }
+
+    .timeline-dot {
+        left: 0 !important;
+        right: auto !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-title {
+        font-size: 1.8rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.95rem !important;
+    }
+
+    .hero-badge {
+        font-size: 0.8rem !important;
+    }
+
+    .hero-actions {
+        flex-direction: column !important;
+    }
+
+    .btn-primary-large,
+    .btn-secondary-large {
+        width: 100% !important;
+        padding: 12px 20px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .mission-section,
+    .values-section,
+    .stats-section,
+    .timeline-section,
+    .team-section,
+    .cta-section {
+        padding: 50px 15px !important;
+    }
+
+    .section-header h2 {
+        font-size: 1.6rem !important;
+    }
+
+    .section-header {
+        margin-bottom: 30px !important;
+    }
+
+    .value-card,
+    .mission-card {
+        padding: 20px !important;
+    }
+
+    .stat-number {
+        font-size: 1.8rem !important;
+    }
+
+    .cta-buttons {
+        flex-direction: column !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: 40px 15px !important;
+        min-height: 350px !important;
+    }
+
+    .hero-title {
+        font-size: 1.5rem !important;
+    }
+
+    .hero-subtitle {
+        font-size: 0.9rem !important;
+        margin-bottom: 25px !important;
+    }
+
+    .hero-actions {
+        gap: 10px !important;
+    }
+
+    .btn-primary-large,
+    .btn-secondary-large {
+        padding: 10px 16px !important;
+        font-size: 0.8rem !important;
+    }
+
+    .mission-section,
+    .values-section,
+    .stats-section,
+    .timeline-section,
+    .team-section,
+    .cta-section {
+        padding: 40px 12px !important;
+    }
+
+    .section-header h2 {
+        font-size: 1.4rem !important;
+    }
+
+    .section-subtitle {
+        font-size: 0.95rem !important;
+    }
+
+    .value-card h3,
+    .mission-card h3 {
+        font-size: 1rem !important;
+    }
+
+    .value-card p,
+    .mission-card p {
+        font-size: 0.9rem !important;
+    }
+
+    .stat-number {
+        font-size: 1.5rem !important;
+    }
+
+    .cta-content h2 {
+        font-size: 1.5rem !important;
+    }
+
+    .cta-content p {
+        font-size: 0.95rem !important;
+    }
+
+    footer {
+        padding: 30px 12px 12px !important;
+    }
+
+    .footer-content {
+        gap: 20px !important;
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media print {
+    .header, .footer, .btn, .form-group {
+        display: none;
+    }
+
+    .card, .job-card {
+        page-break-inside: avoid;
+        border: 1px solid #ddd;
+    }
+
+    body {
+        font-size: 12pt;
+    }
+}
+
+@supports (display: grid) {
+    @media (max-width: 768px) {
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+    }
+}
+
+@supports not (display: grid) {
+    .grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .grid > * {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 250px;
+    }
+}

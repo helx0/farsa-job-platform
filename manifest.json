@@ -1,0 +1,102 @@
+{
+  "name": "فرصة - منصة التوظيف الذكية",
+  "short_name": "فرصة",
+  "description": "منصة توظيف ذكية متخصصة في اليمن بنظام مطابقة ذكي وشهادات آمنة",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#1e40af",
+  "background_color": "#ffffff",
+  "categories": ["business", "employment"],
+  "screenshots": [
+    {
+      "src": "images/screenshot1.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "images/screenshot2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "images/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/maskable-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "images/maskable-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "البحث عن وظيفة",
+      "short_name": "وظائف",
+      "description": "ابحث عن أفضل الوظائف",
+      "url": "pages/jobs.php",
+      "icons": [
+        {
+          "src": "images/job-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "لوحة التحكم",
+      "short_name": "حسابي",
+      "description": "إدارة حسابك والطلبات",
+      "url": "pages/dashboard/index.php",
+      "icons": [
+        {
+          "src": "images/dashboard-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "الدورات التدريبية",
+      "short_name": "دورات",
+      "description": "تطوير مهاراتك مع دوراتنا",
+      "url": "pages/courses.php",
+      "icons": [
+        {
+          "src": "images/courses-icon.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "pages/share.html",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "prefer_related_applications": false,
+  "related_applications": []
+}

@@ -1,0 +1,189 @@
+html[lang="ar"] {
+    direction: rtl;
+    text-align: right;
+}
+
+html[lang="ar"] body {
+    direction: rtl;
+}
+
+html[lang="ar"] .header-content {
+    flex-direction: row-reverse;
+}
+
+html[lang="ar"] .nav {
+    flex-direction: row-reverse;
+}
+
+html[lang="ar"] .user-menu {
+    flex-direction: row-reverse;
+}
+
+html[lang="ar"] .hero-buttons {
+    flex-direction: row-reverse;
+}
+
+html[lang="ar"] .btn {
+    text-align: center;
+}
+
+html[lang="ar"] label {
+    text-align: right;
+}
+
+html[lang="ar"] .form-group {
+    text-align: right;
+}
+
+html[lang="ar"] .footer-section {
+    text-align: right;
+}
+
+html[lang="ar"] .modal-close {
+    float: left;
+}
+
+html[lang="ar"] .job-card {
+    border-left: none;
+    border-right: 4px solid var(--primary);
+}
+
+html[lang="ar"] .alert {
+    border-left: none;
+    border-right: 4px solid;
+}
+
+html[lang="ar"] .card {
+    text-align: right;
+}
+
+html[lang="ar"] .stat-card {
+    text-align: center;
+}
+
+html[lang="ar"] .job-meta {
+    flex-direction: row-reverse;
+}
+
+html[lang="ar"] .badge {
+    display: inline-block;
+}
+
+html[lang="ar"] input, 
+html[lang="ar"] textarea, 
+html[lang="ar"] select {
+    text-align: right;
+}
+
+html[lang="ar"] .notification {
+    right: auto;
+    left: 20px;
+}
+
+@keyframes slideInRTL {
+    from {
+        transform: translateX(-400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+html[lang="ar"] .notification {
+    animation: slideInRTL 0.3s ease;
+}
+
+html[lang="ar"] .modal-header {
+    text-align: right;
+}
+
+html[lang="ar"] .flex {
+    flex-direction: row-reverse;
+}
+
+html[lang="ar"] .gap-10,
+html[lang="ar"] .gap-20 {
+    gap: inherit;
+}
+
+html[lang="ar"] .text-right {
+    text-align: left;
+}
+
+html[lang="ar"] .text-center {
+    text-align: center;
+}
+
+html[lang="ar"] ul {
+    padding-right: 20px;
+    padding-left: 0;
+}
+
+html[lang="ar"] ol {
+    padding-right: 20px;
+    padding-left: 0;
+}
+
+html[lang="ar"] .grid-cols-2,
+html[lang="ar"] .grid-cols-3,
+html[lang="ar"] .grid-cols-4 {
+    direction: rtl;
+}
+
+html[lang="ar"] .header {
+    text-align: right;
+}
+
+html[lang="ar"] .nav {
+    justify-content: flex-end;
+}
+
+html[lang="ar"] .footer-grid {
+    direction: rtl;
+}
+
+html[lang="ar"] .footer-section ul {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+html[lang="ar"] table {
+    text-align: right;
+}
+
+html[lang="ar"] table th,
+html[lang="ar"] table td {
+    text-align: right;
+}
+
+html[lang="ar"] .dashboard-grid {
+    direction: rtl;
+}
+
+html[lang="ar"] .loading::after {
+    background: linear-gradient(-90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+
+@keyframes shimmerRTL {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+html[lang="ar"] .loading::after {
+    animation: shimmerRTL 2s infinite;
+}
+
+html[lang="ar"] .modal-content {
+    text-align: right;
+}
+
+html[lang="ar"] .error,
+html[lang="ar"] .success {
+    text-align: right;
+}
+
+html[lang="ar"] .footer-bottom {
+    text-align: center;
+}
