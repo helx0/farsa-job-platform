@@ -439,3 +439,16 @@ Until a license is added, the repository should be treated as **all rights reser
 ## ⭐ Project Note
 
 Farsa is an evolving educational and portfolio project. The repository is being actively organized to make the architecture, implementation decisions, development process, and future improvements easier to understand and review.
+
+## Security configuration
+
+The repository intentionally keeps runtime secrets and environment-specific settings out of source control.
+
+1. Copy `.env.example` to a local environment configuration and set a strong `JWT_SECRET`.
+2. For the FastAPI service, copy `backend/.env.example` to `backend/.env` and set `MONGO_URL`, `DB_NAME`, and `CORS_ORIGINS`.
+3. Development may enable `DISPLAY_ERRORS=true`; production must use `APP_ENV=production` and `DISPLAY_ERRORS=false`.
+4. Set `CORS_ORIGINS` to explicit frontend origins. Do not use `*` for authenticated production APIs.
+5. Rotate the previously committed JWT signing key before any real deployment. Moving it to environment variables does not erase the old value from Git history.
+6. Application logs are written under `logs/` and the included Apache rule denies direct web access to that directory.
+
+Never commit real passwords, API tokens, SMTP credentials, database credentials, or production `.env` files.
