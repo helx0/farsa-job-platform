@@ -691,12 +691,14 @@ class Notifications {
         }
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead($notificationId, $userId) {
         try {
             $stmt = $this->db->prepare("
-                UPDATE notifications SET read_status = TRUE, read_at = NOW() WHERE id = ?
+                UPDATE notifications
+                SET read_status = TRUE, read_at = NOW()
+                WHERE id = ? AND recipient_user_id = ?
             ");
-            $stmt->bind_param('i', $notificationId);
+            $stmt->bind_param('ii', $notificationId, $userId);
             return $stmt->execute();
         } catch (Exception $e) {
             error_log($e->getMessage());
