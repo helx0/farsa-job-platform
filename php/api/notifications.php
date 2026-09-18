@@ -30,7 +30,7 @@ switch ($action) {
             Response::error('Notification ID required');
         }
 
-        $result = $notifications->markAsRead((int)$_GET['id']);
+        $result = $notifications->markAsRead((int)$_GET['id'], (int)$_SESSION['user_id']);
         if ($result) {
             Response::success('Notification marked as read');
         } else {
