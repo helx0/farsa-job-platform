@@ -360,7 +360,7 @@ class Job {
             ";
 
             if (!empty($filters['search'])) {
-                $search = '%' . $filters['search'] . '%';
+                $search = '%' . $this->db->real_escape_string($filters['search']) . '%';
                 $query .= " AND (j.job_title_ar LIKE '$search' OR j.job_description_ar LIKE '$search')";
             }
 
