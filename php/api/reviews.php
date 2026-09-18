@@ -1,15 +1,7 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 require_once '../config.php';
+header('Content-Type: application/json; charset=utf-8');
+configureCors();
 require_once '../includes/functions.php';
 require_once '../includes/reviews.php';
 
@@ -55,11 +47,42 @@ switch ($action) {
             Response::error('Unauthorized', null, 403);
         }
 
+        $reviewedCompanyId = isset($data['reviewed_company_id']) ? (int)$data['reviewed_company_id'] : null;
+        $reviewedUserId = isset($data['reviewed_user_id']) ? (int)$data['reviewed_user_id'] : null;
+
+        // Never trust the client to claim a review is verified. Derive verification from
+        // an actual application relationship in the database.
+        $verifiedApplicant = false;
+        if ($reviewType === 'job_seeker' && $reviewedCompanyId) {
+            $verify = $db->prepare("
+                SELECT 1
+                FROM job_applications ja
+                INNER JOIN jobs j ON ja.job_id = j.id
+                INNER JOIN job_seekers js ON ja.job_seeker_id = js.id
+                WHERE js.user_id = ? AND j.employer_id = ?
+                LIMIT 1
+            ");
+            $verify->bind_param('ii', $reviewerId, $reviewedCompanyId);
+            $verify->execute();
+            $verifiedApplicant = (bool)$verify->get_result()->fetch_assoc();
+        } elseif ($reviewType === 'employer' && $reviewedUserId) {
+            $verify = $db->prepare("
+                SELECT 1
+                FROM job_applications ja
+                INNER JOIN job_seekers js ON ja.job_seeker_id = js.id
+                WHERE js.user_id = ? AND ja.employer_id = ?
+                LIMIT 1
+            ");
+            $verify->bind_param('ii', $reviewedUserId, $employer['id']);
+            $verify->execute();
+            $verifiedApplicant = (bool)$verify->get_result()->fetch_assoc();
+        }
+
         $reviewData = [
             'reviewer_id' => $reviewerId,
             'reviewer_type' => $reviewType,
-            'reviewed_company_id' => $data['reviewed_company_id'] ?? null,
-            'reviewed_user_id' => $data['reviewed_user_id'] ?? null,
+            'reviewed_company_id' => $reviewedCompanyId,
+            'reviewed_user_id' => $reviewedUserId,
             'rating' => (int)$data['rating'],
             'review_title_ar' => Security::validateInput($data['review_title_ar'] ?? ''),
             'review_title_en' => Security::validateInput($data['review_title_en'] ?? ''),
@@ -68,7 +91,7 @@ switch ($action) {
             'pros' => $data['pros'] ?? '',
             'cons' => $data['cons'] ?? '',
             'would_recommend' => isset($data['would_recommend']) ? (bool)$data['would_recommend'] : false,
-            'verified_applicant' => isset($data['verified_applicant']) ? (bool)$data['verified_applicant'] : false
+            'verified_applicant' => $verifiedApplicant
         ];
 
         $result = $review->addReview($reviewData);

@@ -72,6 +72,12 @@ class User {
 
     public function login($email, $password) {
         try {
+            $clientIp = Security::getClientIp();
+
+            if (Security::isLoginRateLimited($email, $clientIp)) {
+                return ['success' => false, 'message' => 'محاولات تسجيل الدخول كثيرة. حاول مرة أخرى بعد قليل'];
+            }
+
             $stmt = $this->db->prepare("
                 SELECT id, password, user_type, status, email_verified 
                 FROM users WHERE email = ?
@@ -81,12 +87,14 @@ class User {
             $result = $stmt->get_result();
 
             if ($result->num_rows === 0) {
+                Security::recordFailedLogin($email, $clientIp);
                 return ['success' => false, 'message' => 'البريد أو كلمة المرور غير صحيحة'];
             }
 
             $user = $result->fetch_assoc();
 
             if (!Security::verifyPassword($password, $user['password'])) {
+                Security::recordFailedLogin($email, $clientIp);
                 return ['success' => false, 'message' => 'البريد أو كلمة المرور غير صحيحة'];
             }
 
@@ -98,6 +106,9 @@ class User {
                 return ['success' => false, 'message' => 'يرجى التحقق من بريدك الإلكتروني أولاً'];
             }
 
+            Security::clearLoginAttempts($email, $clientIp);
+
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_type'] = $user['user_type'];
 
@@ -169,6 +180,11 @@ class User {
     }
 
     public function logout() {
+        $_SESSION = [];
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'] ?? '', $params['secure'], $params['httponly']);
+        }
         session_destroy();
         return ['success' => true, 'message' => 'تم تسجيل الخروج بنجاح'];
     }
@@ -360,7 +376,7 @@ class Job {
             ";
 
             if (!empty($filters['search'])) {
-                $search = '%' . $filters['search'] . '%';
+                $search = '%' . $this->db->real_escape_string($filters['search']) . '%';
                 $query .= " AND (j.job_title_ar LIKE '$search' OR j.job_description_ar LIKE '$search')";
             }
 
@@ -685,12 +701,14 @@ class Notifications {
         }
     }
 
-    public function markAsRead($notificationId) {
+    public function markAsRead($notificationId, $userId) {
         try {
             $stmt = $this->db->prepare("
-                UPDATE notifications SET read_status = TRUE, read_at = NOW() WHERE id = ?
+                UPDATE notifications
+                SET read_status = TRUE, read_at = NOW()
+                WHERE id = ? AND recipient_user_id = ?
             ");
-            $stmt->bind_param('i', $notificationId);
+            $stmt->bind_param('ii', $notificationId, $userId);
             return $stmt->execute();
         } catch (Exception $e) {
             error_log($e->getMessage());

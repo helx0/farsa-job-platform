@@ -2,6 +2,8 @@
 include '../config.php';
 
 header('Content-Type: application/json; charset=utf-8');
+configureCors();
+requireAdminAccess();
 
 $method = $_SERVER['REQUEST_METHOD'];
 $db = Database::getInstance();

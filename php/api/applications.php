@@ -1,15 +1,7 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
 require_once '../config.php';
+header('Content-Type: application/json; charset=utf-8');
+configureCors();
 require_once '../includes/functions.php';
 require_once '../includes/applications.php';
 
@@ -106,7 +98,11 @@ switch ($action) {
             Response::error('Application ID required');
         }
 
-        $appDetails = $application->getApplicationDetails((int)$_GET['id']);
+        $appDetails = $application->getApplicationDetails(
+            (int)$_GET['id'],
+            (int)$_SESSION['user_id'],
+            $_SESSION['user_type']
+        );
         if ($appDetails) {
             Response::success('Application retrieved', $appDetails);
         } else {
@@ -135,6 +131,7 @@ switch ($action) {
         $result = $application->updateApplicationStatus(
             (int)$data['application_id'],
             $data['status'],
+            (int)$_SESSION['user_id'],
             Security::validateInput(isset($data['notes']) ? $data['notes'] : '')
         );
 

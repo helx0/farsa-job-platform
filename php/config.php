@@ -5,16 +5,28 @@
  */
 
 if (session_status() === PHP_SESSION_NONE) {
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? null) == 443);
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => $isHttps,
+        'httponly' => true,
+        'samesite' => 'Lax'
+    ]);
     session_start();
 }
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'helxdb');
-define('DB_PORT', 3306);
+$appEnv = getenv('APP_ENV') ?: 'development';
+$displayErrors = filter_var(getenv('DISPLAY_ERRORS') ?: ($appEnv !== 'production' ? '1' : '0'), FILTER_VALIDATE_BOOLEAN);
 
-define('SITE_URL', 'http://localhost:8080/');
+// Database settings are read from the environment first, with safe local-development defaults.
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'helxdb');
+define('DB_PORT', (int)(getenv('DB_PORT') ?: 3306));
+
+define('SITE_URL', getenv('SITE_URL') ?: 'http://localhost:8080/');
 define('SITE_NAME', 'فرصة');
 define('SITE_NAME_EN', 'Farsa');
 
@@ -29,8 +41,21 @@ define('ALLOWED_EXTENSIONS', 'pdf,doc,docx,jpg,jpeg,png,gif');
 define('ADMIN_EMAIL', 'admin@farsa.ye');
 define('SUPPORT_EMAIL', 'support@farsa.ye');
 
-define('JWT_SECRET', 'Farsa2025!SecureKey#YemenJobPlatform$Strong&RandomSecret');
+$jwtSecret = getenv('JWT_SECRET') ?: '';
+if ($appEnv === 'production' && $jwtSecret === '') {
+    error_log('JWT_SECRET is not configured in production.');
+    http_response_code(500);
+    exit('Application configuration error.');
+}
+if ($jwtSecret === '') {
+    $jwtSecret = 'development-only-change-this-secret';
+}
+define('JWT_SECRET', $jwtSecret);
 define('SESSION_TIMEOUT', 3600);
+// Authentication hardening: throttle repeated failed logins by email and source IP.
+define('LOGIN_MAX_ATTEMPTS', 5);
+define('LOGIN_WINDOW_SECONDS', 900); // 15 minutes
+define('LOGIN_LOCKOUT_SECONDS', 900); // 15 minutes
 define('PASSWORD_MIN_LENGTH', 8);
 define('PASSWORD_REQUIRE_UPPERCASE', true);
 define('PASSWORD_REQUIRE_NUMBERS', true);
@@ -102,15 +127,15 @@ define('ENABLE_EMAIL_VERIFICATION', true);
 define('ENABLE_PHONE_VERIFICATION', false);
 
 define('SMS_GATEWAY', 'twilio');
-define('TWILIO_ACCOUNT_SID', '');
-define('TWILIO_AUTH_TOKEN', '');
-define('TWILIO_PHONE_NUMBER', '');
+define('TWILIO_ACCOUNT_SID', getenv('TWILIO_ACCOUNT_SID') ?: '');
+define('TWILIO_AUTH_TOKEN', getenv('TWILIO_AUTH_TOKEN') ?: '');
+define('TWILIO_PHONE_NUMBER', getenv('TWILIO_PHONE_NUMBER') ?: '');
 
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', '');
-define('SMTP_PASSWORD', '');
-define('SMTP_FROM', 'noreply@farsa.ye');
+define('SMTP_HOST', getenv('SMTP_HOST') ?: 'smtp.gmail.com');
+define('SMTP_PORT', (int)(getenv('SMTP_PORT') ?: 587));
+define('SMTP_USER', getenv('SMTP_USER') ?: '');
+define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: '');
+define('SMTP_FROM', getenv('SMTP_FROM') ?: 'noreply@farsa.ye');
 
 define('PAGINATION_LIMIT', 20);
 define('SEARCH_LIMIT', 50);
@@ -145,6 +170,12 @@ class Response {
     public static function redirect($url) {
         header('Location: ' . $url);
         exit;
+    }
+}
+
+function requireAdminAccess() {
+    if (!isset($_SESSION['user_id'], $_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
+        Response::error('Unauthorized', null, 401);
     }
 }
 
@@ -267,6 +298,58 @@ class Security {
         return password_verify($password, $hash);
     }
 
+    public static function getClientIp() {
+        // Do not trust X-Forwarded-For unless the deployment explicitly configures
+        // a trusted reverse proxy and normalizes the header.
+        return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    public static function isLoginRateLimited($email, $ip) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("
+            SELECT MAX(blocked_until) AS blocked_until,
+                   MAX(first_failed_at) AS first_failed_at,
+                   COALESCE(MAX(attempts), 0) AS attempts
+            FROM login_attempts
+            WHERE (email = ? OR ip_address = ?)
+              AND first_failed_at >= DATE_SUB(NOW(), INTERVAL 15 MINUTE)
+        ");
+        $stmt->bind_param('ss', $email, $ip);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+
+        if (!empty($row['blocked_until']) && strtotime($row['blocked_until']) > time()) {
+            return true;
+        }
+
+        return ((int)$row['attempts'] >= LOGIN_MAX_ATTEMPTS);
+    }
+
+    public static function recordFailedLogin($email, $ip) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("
+            INSERT INTO login_attempts (email, ip_address, attempts, first_failed_at, blocked_until)
+            VALUES (?, ?, 1, NOW(), NULL)
+            ON DUPLICATE KEY UPDATE
+                attempts = IF(first_failed_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE), 1, attempts + 1),
+                first_failed_at = IF(first_failed_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE), NOW(), first_failed_at),
+                blocked_until = IF(
+                    IF(first_failed_at < DATE_SUB(NOW(), INTERVAL 15 MINUTE), 1, attempts + 1) >= 5,
+                    DATE_ADD(NOW(), INTERVAL 15 MINUTE),
+                    blocked_until
+                )
+        ");
+        $stmt->bind_param('ss', $email, $ip);
+        $stmt->execute();
+    }
+
+    public static function clearLoginAttempts($email, $ip) {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("DELETE FROM login_attempts WHERE email = ? OR ip_address = ?");
+        $stmt->bind_param('ss', $email, $ip);
+        $stmt->execute();
+    }
+
     public static function validatePassword($password) {
         if (strlen($password) < PASSWORD_MIN_LENGTH) {
             return false;
@@ -305,9 +388,31 @@ class Security {
 }
 
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
-ini_set('log_errors', 1);
+ini_set('display_errors', $displayErrors ? '1' : '0');
+ini_set('display_startup_errors', $displayErrors ? '1' : '0');
+ini_set('log_errors', '1');
 ini_set('error_log', __DIR__ . '/../logs/error.log');
+
+function configureCors() {
+    $configuredOrigins = getenv('CORS_ORIGINS') ?: 'http://localhost:8080,http://localhost:3000';
+    $allowedOrigins = array_values(array_filter(array_map('trim', explode(',', $configuredOrigins))));
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+    if ($origin !== '' && in_array($origin, $allowedOrigins, true)) {
+        header('Access-Control-Allow-Origin: ' . $origin);
+        header('Vary: Origin');
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type, Authorization, X-CSRF-Token');
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        http_response_code(204);
+        exit();
+    }
+}
+
+configureCors();
 
 set_error_handler(function($errno, $errstr, $errfile, $errline) {
     error_log("Error [$errno]: $errstr in $errfile on line $errline");
