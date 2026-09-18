@@ -6,9 +6,10 @@ configureCors();
     require_once '../includes/functions.php';
 } catch (Exception $e) {
     http_response_code(500);
+    error_log('Authentication API bootstrap error: ' . $e->getMessage());
     echo json_encode([
         'status' => 'error',
-        'message' => 'Config Error: ' . $e->getMessage()
+        'message' => 'خطأ في تهيئة النظام'
     ]);
     exit;
 }
