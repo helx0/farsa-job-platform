@@ -150,12 +150,14 @@ class Message {
         }
     }
 
-    public function markMessageAsRead($messageId) {
+    public function markMessageAsRead($messageId, $userId) {
         try {
             $stmt = $this->db->prepare("
-                UPDATE messages SET is_read = TRUE, read_at = NOW() WHERE id = ?
+                UPDATE messages
+                SET is_read = TRUE, read_at = NOW()
+                WHERE id = ? AND recipient_id = ?
             ");
-            $stmt->bind_param('i', $messageId);
+            $stmt->bind_param('ii', $messageId, $userId);
             $stmt->execute();
         } catch (Exception $e) {
             error_log($e->getMessage());
