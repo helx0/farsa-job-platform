@@ -98,7 +98,11 @@ switch ($action) {
             Response::error('Application ID required');
         }
 
-        $appDetails = $application->getApplicationDetails((int)$_GET['id']);
+        $appDetails = $application->getApplicationDetails(
+            (int)$_GET['id'],
+            (int)$_SESSION['user_id'],
+            $_SESSION['user_type']
+        );
         if ($appDetails) {
             Response::success('Application retrieved', $appDetails);
         } else {
@@ -127,6 +131,7 @@ switch ($action) {
         $result = $application->updateApplicationStatus(
             (int)$data['application_id'],
             $data['status'],
+            (int)$_SESSION['user_id'],
             Security::validateInput(isset($data['notes']) ? $data['notes'] : '')
         );
 
