@@ -34,6 +34,22 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_status (status)
 );
 
+-- Login throttling / brute-force protection
+DROP TABLE IF EXISTS login_attempts;
+CREATE TABLE login_attempts (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(100) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempts INT NOT NULL DEFAULT 1,
+    first_failed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    blocked_until DATETIME NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_login_attempt_email_ip (email, ip_address),
+    INDEX idx_login_attempt_email (email),
+    INDEX idx_login_attempt_ip (ip_address),
+    INDEX idx_login_attempt_blocked (blocked_until)
+);
+
 -- Job Seekers Profile
 DROP TABLE IF EXISTS job_seekers;
 CREATE TABLE job_seekers (
