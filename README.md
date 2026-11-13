@@ -1,243 +1,56 @@
-# Farsa — Intelligent Job Matching Platform 🇾🇪
+# Farsa — Job & Opportunity Platform 🇾🇪
 
-> A full-stack employment platform designed to connect job seekers and employers, with intelligent job matching, applications, communication, courses, certificates, and role-based dashboards.
+Farsa (فرصة) is a full-stack employment platform project designed to connect job seekers with employers, with role-based experiences for candidates, employers, and administrators.
 
-[![Status](https://img.shields.io/badge/status-in%20development-orange)](https://github.com/helx0/farsa-job-platform)
-[![PHP](https://img.shields.io/badge/PHP-8%2B-777BB4?logo=php&logoColor=white)](https://www.php.net/)
-[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
-[![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-API-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+> **Project status:** Active development / portfolio project. Features and setup instructions should be validated against the current code before production use.
 
----
+## Overview
 
-## 📌 Overview
+Farsa aims to provide a single place to discover opportunities and manage the recruitment process.
 
-**Farsa (فرصة)** is a multi-role job platform concept focused on the Yemeni employment market.
+- **Job seekers:** profiles, skills, job discovery, saved jobs, applications, and application tracking.
+- **Employers:** company profiles, job listings, applicant review, and recruitment workflows.
+- **Administrators:** platform-level management and oversight.
 
-The project provides separate experiences for:
+The repository contains a PHP/MySQL application alongside frontend and backend components. The codebase is evolving, so not every planned capability should be assumed to be production-ready.
 
-- 👤 **Job Seekers** — create profiles, manage skills and experience, search for jobs, save jobs, apply, communicate, and track applications.
-- 🏢 **Employers** — manage company profiles, publish jobs, review applications, communicate with candidates, and manage hiring-related data.
-- 🛡️ **Administrators** — manage users, companies, jobs, platform statistics, logs, and administrative operations.
+## Technology
 
-The platform also includes supporting features such as courses, certificates, notifications, reviews, referrals, subscriptions, and certificate verification.
+| Area | Technologies present in the repository |
+|---|---|
+| Core application | PHP, MySQL |
+| Web interface | HTML, CSS, JavaScript |
+| Frontend workspace | React |
+| Backend workspace | Python, FastAPI |
+| Development | Git, GitHub, XAMPP, Node.js |
 
----
-
-## ✨ Key Features
-
-### 👤 Job Seeker
-- Registration and authentication
-- Profile management
-- Skills, education, and work experience
-- CV/resume information
-- Job search and filtering
-- Job details
-- Saved jobs
-- Job applications
-- Application status tracking
-- Messages and notifications
-- Courses and enrollment
-- Certificates and verification
-- Profile completeness and CV-related scoring
-
-### 🏢 Employer
-- Employer/company profile
-- Company verification workflow
-- Job posting and management
-- Applicant management
-- Candidate matching information
-- Messaging
-- Company statistics
-- Subscription plans
-
-### 🛡️ Administration
-- User management
-- Employer/company management
-- Job management
-- Platform statistics
-- Administrative logs
-- Moderation and verification workflows
-
-### 🧠 Matching System
-
-Farsa includes a weighted matching model that considers:
-
-| Factor | Weight |
-|---|---:|
-| Skills | 40% |
-| Experience | 25% |
-| Education | 15% |
-| Location | 10% |
-| Salary | 10% |
-
-These weights are currently represented in the application configuration and can be refined as the matching system evolves.
-
-### 🔐 Security-Oriented Features
-- Password hashing
-- CSRF token support
-- Input validation
-- Session management
-- Role-based access concepts
-- Email verification support
-- Two-factor authentication support
-- JWT-based authentication components
-- Error logging
-
-### ⛓️ Certificate Verification
-
-The project contains a certificate verification component with blockchain-style records and hashes intended to provide an additional verification layer for credentials.
-
-> This is an application-level implementation for the project and should not be interpreted as a production public blockchain network.
-
----
-
-## 🏗️ Architecture
-
-The repository currently contains multiple application layers:
-
-```text
-┌───────────────────────────────────────────────────────────┐
-│                       Farsa Platform                      │
-├───────────────────────────────────────────────────────────┤
-│ Presentation Layer                                        │
-│ PHP Pages + HTML/CSS/JS + React Frontend                 │
-├───────────────────────────────────────────────────────────┤
-│ Application / API Layer                                   │
-│ PHP APIs + Python/FastAPI Backend                         │
-├───────────────────────────────────────────────────────────┤
-│ Business Logic                                            │
-│ Authentication • Jobs • Applications • Matching          │
-│ Messaging • Courses • Certificates • Administration       │
-├───────────────────────────────────────────────────────────┤
-│ Data Layer                                                │
-│ MySQL Database                                            │
-├───────────────────────────────────────────────────────────┤
-│ Supporting Components                                     │
-│ Blockchain-style Verification • Notifications • Logging  │
-└───────────────────────────────────────────────────────────┘
-```
-
-Detailed architecture documentation will be added under `docs/`.
-
----
-
-## 🧰 Technology Stack
-
-### Backend
-- PHP
-- MySQL / MySQLi
-- REST-style PHP APIs
-- Python
-- FastAPI
-- JWT-related authentication components
-
-### Frontend
-- HTML5
-- CSS3
-- JavaScript
-- React
-- React Router
-- Tailwind CSS
-- Lucide React
-- Axios
-
-### Development
-- XAMPP
-- Git
-- GitHub
-- Node.js / npm or Yarn
-- Python virtual environments
-
----
-
-## 📁 Project Structure
+## Repository structure
 
 ```text
 farsa-job-platform/
-│
-├── backend/                 # Python/FastAPI backend
-│
-├── frontend/                # React frontend
-│   ├── public/
-│   └── src/
-│
-├── css/                     # Main application styles
-├── js/                      # Main JavaScript modules
-│
-├── includes/                # Shared PHP layout components
-├── pages/                   # Application pages
-│   ├── auth/
-│   └── dashboard/
-│       ├── admin/
-│       ├── employer/
-│       └── job-seeker/
-│
-├── php/
-│   ├── api/                 # PHP API endpoints
-│   ├── blockchain/          # Certificate verification logic
-│   ├── includes/            # Shared PHP business logic
-│   └── migrations/          # Database migrations
-│
-├── database.sql             # Main database schema/demo data
-├── import_db.sql            # Database import helper
-├── manifest.json             # PWA metadata
-├── .gitignore
-└── README.md
+├── backend/       # Python / FastAPI service
+├── frontend/      # React application
+├── css/           # Stylesheets
+├── js/            # Browser-side JavaScript
+├── includes/      # Shared PHP components
+├── pages/         # Application pages and dashboards
+├── php/           # PHP APIs and supporting logic
+├── tests/         # Test and diagnostic resources
+├── database.sql   # Database schema / seed material
+├── README.md
+└── .gitignore
 ```
 
----
+Some directories and features may still be under development. Check the source and configuration files before relying on a component.
 
-## 🗄️ Database
+## Getting started
 
-The main schema is available in:
+### Prerequisites
 
-```text
-database.sql
-```
-
-The database is designed around entities including:
-
-- Users
-- Job seekers
-- Employers
-- Jobs
-- Job categories
-- Skills
-- Applications
-- Saved jobs
-- Education
-- Experience
-- Certificates
-- Blockchain records
-- Courses
-- Course enrollments
-- Notifications
-- Messages
-- Referrals
-- Reviews
-- Admin logs
-- Platform statistics
-- Subscriptions
-- Exchange rates
-
-Database documentation and an ER diagram are planned under `docs/`.
-
----
-
-## 🚀 Local Development
-
-### Requirements
-
-Install:
-
-- XAMPP
-- PHP 8+
+- PHP and a compatible web server (for example, Apache through XAMPP)
 - MySQL
-- Node.js
-- Python 3.x
-- Git
+- Node.js and npm (for the React frontend)
+- Python 3 (for the FastAPI service, if you intend to run it)
 
 ### 1. Clone the repository
 
@@ -246,209 +59,71 @@ git clone https://github.com/helx0/farsa-job-platform.git
 cd farsa-job-platform
 ```
 
-### 2. Configure MySQL
+### 2. Set up the database
 
-Create the database and import:
+1. Start MySQL.
+2. Create a local development database.
+3. Review `database.sql` before importing it.
+4. Configure the application's database connection using local settings.
 
-```text
-database.sql
-```
+Do not use production credentials in source files. Never commit passwords, API keys, signing secrets, or real user data.
 
-The default development configuration expects:
+### 3. Run the PHP application
 
-```text
-Host: localhost
-Port: 3306
-Database: helxdb
-User: root
-Password: empty
-```
+Place the project in your local web-server document root (for example, `C:\\xampp\\htdocs\\farsa-job-platform`), start Apache and MySQL, and open the matching local URL.
 
-> These are development defaults only. Production credentials should never be committed to the repository.
+Review the project's PHP configuration first; paths and database settings may need to be adjusted for your environment.
 
-### 3. Run PHP with XAMPP
-
-Place the project inside the XAMPP web root, for example:
-
-```text
-C:\xampp\htdocs\farsa-job-platform
-```
-
-Start:
-
-- Apache
-- MySQL
-
-Then open the local application using the configured local URL.
-
-### 4. Run the React frontend
+### 4. Run the frontend (if working on it)
 
 ```bash
 cd frontend
 npm install
-npm start
 ```
 
-Or use Yarn if preferred:
+Then use the start or development script defined in `frontend/package.json`.
 
-```bash
-yarn install
-yarn start
-```
-
-### 5. Run the Python backend
-
-Create a virtual environment:
+### 5. Run the Python service (if working on it)
 
 ```bash
 cd backend
-python -m venv venv
+python -m venv .venv
 ```
 
-Activate it on Windows:
+Activate the virtual environment, install the dependencies listed in the backend requirements file, and follow the service entry point/configuration in the source.
 
-```powershell
-.\venv\Scripts\Activate.ps1
-```
+## Security and deployment
 
-Install dependencies:
+This repository is a development and portfolio project. Before any public deployment:
 
-```bash
-pip install -r requirements.txt
-```
+- Move all credentials and secrets into environment variables or secure server-side configuration.
+- Rotate any secret that may have been committed previously.
+- Review authentication, authorization, session handling, and password hashing.
+- Validate and safely store uploaded files.
+- Disable debug output and development/diagnostic endpoints.
+- Configure HTTPS, secure cookies, and restrictive CORS rules.
+- Review database queries and input validation.
+- Use a separate production database; do not deploy demo accounts or sample data.
+- Run security and functional tests against the deployed configuration.
 
-Start the FastAPI application according to the entry points defined in `server.py`.
+## Roadmap
 
----
+- [ ] Verify and document the current local setup end-to-end
+- [ ] Add screenshots of the working application
+- [ ] Document the database schema and relationships
+- [ ] Document API endpoints and request/response examples
+- [ ] Add repeatable automated tests
+- [ ] Add continuous integration checks
+- [ ] Review production security and deployment configuration
+- [ ] Document the matching approach and its evaluation
 
-## 🔑 Demo Data
+## About the author
 
-The database schema currently contains demonstration records intended for local development and testing.
+**Ehab Tawfik Ahmed**  
+Information Technology Student | Software Development
 
-**Do not use the bundled demo credentials or sample secrets in production.**
+- GitHub: [@helx0](https://github.com/helx0)
 
----
+## Notes
 
-## 🔒 Security Notes
-
-This repository is a development/portfolio project.
-
-Before production deployment, the following should be completed:
-
-- Move secrets and environment-specific configuration outside source control.
-- Rotate any credentials or signing secrets that have ever been committed.
-- Use environment variables for database, JWT, SMTP, and external-service credentials.
-- Review CORS configuration.
-- Review authentication and authorization boundaries.
-- Disable development/debug endpoints in production.
-- Protect uploaded files and validate file types/content.
-- Add rate limiting to authentication and sensitive APIs.
-- Add automated security tests.
-- Review SQL queries and prepared-statement usage across all endpoints.
-- Configure HTTPS and secure session cookies.
-- Separate demo/test data from production data.
-
----
-
-## 🧪 Testing
-
-The repository contains test and diagnostic material used during development.
-
-As the project matures, automated tests will be organized under:
-
-```text
-tests/
-```
-
-and integrated into a GitHub Actions CI workflow.
-
----
-
-## 🗺️ Roadmap
-
-- [x] Multi-role authentication foundation
-- [x] Job management foundation
-- [x] Job applications
-- [x] Employer and job seeker dashboards
-- [x] Messaging and notifications foundation
-- [x] Course and certificate entities
-- [x] Matching model foundation
-- [ ] Production-ready environment configuration
-- [ ] Automated backend tests
-- [ ] Frontend test suite
-- [ ] CI/CD pipeline
-- [ ] API documentation
-- [ ] Database ER diagram
-- [ ] Portfolio screenshots
-- [ ] Deployment configuration
-- [ ] Advanced AI-based job recommendation
-- [ ] Production-grade certificate verification
-
----
-
-## 📚 Documentation
-
-Planned documentation:
-
-- `docs/architecture.md` — system architecture
-- `docs/database.md` — database design
-- `docs/api.md` — API reference
-- `docs/security.md` — security considerations
-- `docs/development.md` — development workflow
-
----
-
-## 🎓 Project Purpose
-
-Farsa is designed as a practical full-stack software engineering project demonstrating:
-
-- Requirements analysis
-- Database design
-- Backend development
-- REST API development
-- Frontend development
-- Authentication and authorization
-- Role-based systems
-- Search and matching logic
-- File handling
-- Notifications and messaging
-- Security concepts
-- Git/GitHub workflow
-- Multi-stack application architecture
-
----
-
-## 👨‍💻 Author
-
-**Ehab Tawfik Ahmed**
-
-IT Student & Software Developer
-
-GitHub: [@helx0](https://github.com/helx0)
-
----
-
-## 📄 License
-
-A license has not yet been selected for this project.
-
-Until a license is added, the repository should be treated as **all rights reserved** for reuse purposes.
-
----
-
-## ⭐ Project Note
-
-Farsa is an evolving educational and portfolio project. The repository is being actively organized to make the architecture, implementation decisions, development process, and future improvements easier to understand and review.
-
-## Security configuration
-
-The repository intentionally keeps runtime secrets and environment-specific settings out of source control.
-
-1. Copy `.env.example` to a local environment configuration and set a strong `JWT_SECRET`.
-2. For the FastAPI service, copy `backend/.env.example` to `backend/.env` and set `MONGO_URL`, `DB_NAME`, and `CORS_ORIGINS`.
-3. Development may enable `DISPLAY_ERRORS=true`; production must use `APP_ENV=production` and `DISPLAY_ERRORS=false`.
-4. Set `CORS_ORIGINS` to explicit frontend origins. Do not use `*` for authenticated production APIs.
-5. Rotate the previously committed JWT signing key before any real deployment. Moving it to environment variables does not erase the old value from Git history.
-6. Application logs are written under `logs/` and the included Apache rule denies direct web access to that directory.
-
-Never commit real passwords, API tokens, SMTP credentials, database credentials, or production `.env` files.
+Farsa is an evolving project. Please treat feature descriptions as project goals or implementation areas unless they have been verified in the current version of the code. No license has been added yet; all rights are reserved by default.
